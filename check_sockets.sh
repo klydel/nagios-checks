@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author(s): Clyde Lingenfelter <klydel@gmail.com>
 #simple bash shell script to get total sockets and open files for a system
 #need to source your nagios utils.sh for use
 . /usr/share/nagios/libexec/utils.sh

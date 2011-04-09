@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# Author(s): Clyde Lingenfelter <klydel@gmail.com>
 # simple check to get dfs used percentage by visiting hadoops dfshealth page
 # usage ./check_dfs_space nym-hadoop1 50070
 use Nagios::Plugin::Functions;
