@@ -1,0 +1,33 @@
+#!/usr/bin/perl -w
+# Author(s): Clyde Lingenfelter <klydel@gmail.com>
+use Nagios::Plugin::Functions;
+use WWW::Mechanize;
+#Number of Servers in Apache Cluster
+@mynum = (1..150);
+#an example of $dcname would be any hostname minus the number portion , example: nym-web1, nym-web4 , etc
+my $dcname = $ARGV[0];
+my $total_rps = 0;
+$agent = WWW::Mechanize->new(timeout=>3);
+sub getRPS {
+        	#be sure to change _apachestatus to whatever you have in httpd.conf
+		eval {$agent->get("http://$dcname$num/_apachestatus")};
+		if($@) {
+			push(@rpsStats, 0);
+		}
+		else {
+        		my @stats = $agent->content =~ /([-+]?[0-9]*\.?[0-9]+) requests\/sec/;
+			foreach (@stats) {
+				push(@rpsStats, $_);
+			}
+		}
+}
+foreach $num(@mynum) {
+        getRPS($num);
+        }
+
+($total_rps+=$_) for @rpsStats; 
+if ( $total_rps > 100000 ) {
+    nagios_exit('CRITICAL', "Total RPS for $dc: $total_rps | RequestsPerSecond=$total_rps");
+} else {
+    nagios_exit('OK', "Total RPS for $dc: $total_rps | RequestsPerSecond=$total_rps");
+}
