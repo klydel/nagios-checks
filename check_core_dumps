@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+# Author(s): Clyde Lingenfelter <klydel@gmail.com>
+#script to check for coredumps in a directory
+use File::stat;
+use IO::Handle;
+use Time::Piece;
+use Nagios::Plugin::Functions;
+my $t = localtime(time - (86400));
+$compare = $t->epoch;
+#Directory to check for coredumps
+$coredir = "/var/log/coredumps";
+opendir(DIR, $coredir) || die "can't opendir $coredir: $!";
+@FILES= grep !/^\.\.?$/, readdir(DIR);
+
+foreach $corefile ( @FILES )
+{	
+	$coretime = stat($coredir . $corefile)->mtime;
+	if (( $compare < $coretime )) {
+		push(@BAD, $corefile);
+	}
+}
+$numproblems = $#BAD +1;
+if (( $numproblems > 0 )) 
+{
+        nagios_exit('CRITICAL',": Total Coredumps: $numproblems");
+}
+else
+{
+        nagios_exit('OK',": Total Coredumps: $numproblems");
+}
+	
+closedir DIR;
+
