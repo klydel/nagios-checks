@@ -1,0 +1,16 @@
+#!/usr/bin/perl -w
+# Author(s): Clyde Lingenfelter <klydel@gmail.com>
+# for i in {1..20} ; do ./disableNagiosAlerts myserver$1.mycompany.com ; done
+use WWW::Mechanize;
+use HTML::TokeParser;
+my $timeout = 30;
+$naguser= '';
+$nagpass= '';
+$troublehost= $ARGV[0];
+chomp($troublehost);
+sub disableNagiosAlerts {
+        my $agent = WWW::Mechanize->new();
+        $agent->get("https://$naguser:$nagpass\@localhost/nagios/cgi-bin/cmd.cgi?cmd_typ=29&host=$troublehost");
+	$agent->click("btnSubmit");
+    }
+disableNagiosAlerts();
