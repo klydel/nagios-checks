@@ -51,3 +51,32 @@ Uses Apache's mod_status page to get request per second (rps) stats from all ser
 </code></pre>
 
 
+check_sockets.sh
+-----------
+bash shell script to get total sockets and open files for a system.
+
+
+disableNagiosChecks
+-----------
+Script used to disable all nagios alerts for a given server. Requires a nagios username and password.
+<pre><code>
+    ./disableNagiosChecks nym-web1
+    
+    for i in {1..50} ; do ./disableNagiosChecks nym-web$i ; done    
+</code></pre>
+
+
+get_mysql_status.py
+-----------
+Gets mysql stats for a server usering "SHOW GLOBAL STATUS". Returns performace data.  Requires mysql username, password, and port.
+<pre><code>
+    ./get_mysql_status.py
+    OK - Aborted_clients:14,Threads_connected:10,Qcache_inserts:0,Qcache_queries_in_cache:0,Innodb_buffer_pool_wait_free:0,Innodb_buffer_pool_pages_dirty:43,Innodb_row_lock_time_avg:46,Innodb_buffer_pool_pages_flushed:73,Innodb_os_log_pending_writes:0,Threads_cached:0,Innodb_data_pending_reads:0,Qcache_hits:0,Innodb_data_pending_writes:0,Slow_queries:32,Innodb_os_log_pending_fsyncs:0,Innodb_log_waits:34,Innodb_row_lock_waits:80,Open_tables:400,Innodb_data_pending_fsyncs:0,Qcache_free_memory:0,Threads_running:2,Open_files:95,Table_locks_waited:187    
+
+</code></pre>
+
+
+
+
+
+
