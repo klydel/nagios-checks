@@ -76,6 +76,40 @@ Gets mysql stats for a server usering "SHOW GLOBAL STATUS". Returns performace d
 </code></pre>
 
 
+get_redis_items.py
+-----------
+script to pull key lengths from redis, reports to nagios with perf data.  Update script with key names inside queues list.
+<pre><code>
+    ./get_redis_items.py myhost.mydomain.com 6379
+    OK - mykey1-example:198,mykey2-example:89
+
+
+</code></pre>
+
+
+get_redis_stats.py
+-----------
+script to pull INFO command from redis.  gets connected_clients, used_memory, used_memory_lua, instantaneous_ops_per_sec, instantaneous_ops_per_sec, latest_fork_usec, used_memory_rss, blocked_clients, rejected_connections.  
+<pre><code>
+    ./get_redis_stats.py myhost.mydomain.com 6379
+    OK - connected_clients:193,blocked_clients:2,rejected_connections:0,used_memory:12340208,used_memory_lua:31744,iops_per_sec:44,fork_usec:5
+
+
+</code></pre>
+
+
+
+network_stats.pl
+-----------
+script to grab network interface stats from /sys/class/net on linux.  Outpus perf data as well.
+<pre><code>
+    ./network_stats.pl eth1
+    OK - collisions=0: multicast=6: rx_bytes=16756639755735: rx_compressed=0: rx_crc_errors=0: rx_dropped=0: rx_errors=0: rx_fifo_errors=0: rx_frame_errors=0: rx_length_errors=0: rx_missed_errors=25731: rx_over_errors=0: rx_packets=39310580998: tx_aborted_errors=0: tx_bytes=20133836511769: tx_carrier_errors=0: tx_compressed=0: tx_dropped=0: tx_errors=0: tx_fifo_errors=0: tx_heartbeat_errors=0: tx_packets=46496395859: tx_window_errors=0: 
+
+
+</code></pre>
+
+
 
 
 
