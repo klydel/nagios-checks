@@ -35,10 +35,10 @@ script returns ok status for everything at the moment.  just using this to chart
 check_rds
 -----------
 wrapper for mon-get-stats.  Used to get database stats from Amazon RDS.  Requires Amazon api tools. 
-only returns OK status currently, you can add checks though.
+only returns OK status currently for most checks, you can add further checks though.
 <pre><code>
-    ./check_rds MyRDS WriteIOPS 6000 1000
-    OK - WriteIOPS=104.42188776105472
+    ./check_rds_new myhost WriteIOPS 800
+    OK - WriteIOPS=67.22689075630252 |WriteIOPS=67.22689075630252\n
 </code></pre>
 
 
