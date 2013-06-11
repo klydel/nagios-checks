@@ -1,8 +1,6 @@
 #!/bin/bash
-#simple nagios check for amazon rds instances
-#can be run like:
-#/var/spool/nagios/plugins/check_rds MyRDS WriteIOPS 6000 1000
-#requires aws api tools
+#usage : ./check_rds_new myhost WriteIOPS 800
+#OK - WriteIOPS=67.22689075630252 |WriteIOPS=67.22689075630252\n
 . /var/spool/nagios/plugins/utils.sh
 
 DBINSTANCE=$1
@@ -11,11 +9,20 @@ MXTHRESHOLD=$3
 MNTHRESHOLD=$4
 RESULT=""
 MON-GET-CMD="/opt/aws/apitools/mon/bin/mon-get-stats"
-AWS-CRED-FILE="/opt/aws/credential-file-path.conf"
+AWS-CRED-FILE="/opt/aws/credential.conf"
 
-
+function checkthresh {
+    RESULT=${RESULT/.*}
+    if [[ $RESULT -gt $MXTHRESHOLD ]]
+	then
+	warn
+    else
+	echo "OK - $STAT |$STAT\n"
+	exit $STATE_OK
+    fi
+}
 function warn {
-    echo "WARNING - $WARNIN - RequestCount:$RESULT | RequestCount:$RESULT;"
+    echo "WARNING - WARNING - $METRIC:$RESULT | $METRIC:$RESULT;"
     exit $STATE_WARNING
 }
 
@@ -24,7 +31,7 @@ function check_stat {
     then
 	RESULT=`$MON-GET-CMD $METRIC --period 60 --namespace AWS/RDS --dimensions "DBInstanceIdentifier=$DBINSTANCE" --statistics "Sum" --aws-credential-file=$AWS-CRED-FILE | tail -n 1 | awk '{print $3}'`
     else
-	RESULT=`$MON-GET-CMD $METRIC --period 60 --start-time $(date +'%Y-%m-%dT%H:%M' --date='-1 minutes') --end-time $(date +'%Y-%m-%dT%H:%M') --namespace AWS/RDS --dimensions "DBInstanceIdentifier=$DBINSTANCE" --statistics "Sum" --aws-credential-file=$AWS-CRED-FILE| tail -n 1 | awk '{print $3}'`
+	RESULT=`$MON-GET-CMD $METRIC --period 60 --start-time $(date +'%Y-%m-%dT%H:%M' --date='-1 minutes') --end-time $(date +'%Y-%m-%dT%H:%M') --namespace AWS/RDS --dimensions "DBInstanceIdentifier=$DBINSTANCE" --statistics "Sum" --aws-credential-file=$AWS-CRED-FILE | tail -n 1 | awk '{print $3}'`
     fi
 
     if [[ "$RESULT" == *E* ]]
@@ -33,74 +40,82 @@ function check_stat {
     fi
 }
 
+
+
 check_stat
 STAT="$METRIC=${RESULT}"
 
-#use these later for different min max checks
-if [[ "$METRIC" -eq "WriteIOPS" ]]
+if [[ "$METRIC" == "WriteIOPS" ]]
+    then
+    checkthresh
+
+elif [[ "$METRIC" == "ReadIOPS" ]]
+    then
+    checkthresh
+
+elif [[ "$METRIC" == "ReadThroughput" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "ReadIOPS" ]]
+elif [[ "$METRIC" == "WriteThroughput" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "ReadThroughput" ]]
+elif [[ "$METRIC" == "ReadLatency" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "WriteThroughput" ]]
+elif [[ "$METRIC" == "WriteLatency" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "ReadLatency" ]]
+elif [[ "$METRIC" == "DatabaseConnections" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "WriteLatency" ]]
+elif [[ "$METRIC" == "CPUUtilization" ]]
+    then
+    checkthresh
+
+elif [[ "$METRIC" == "FreeStorageSpace" ]]
+    then
+    RESULT=${RESULT/.*}
+    if [[ $RESULT -lt $MXTHRESHOLD ]]
+	then
+	warn
+    else
+	echo "OK - $STAT |$STAT\n"
+	exit $STATE_OK
+    fi
+
+
+elif [[ "$METRIC" == "DiskQueueDepth" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "DatabaseConnections" ]]
+elif [[ "$METRIC" == "FreeableMemory" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "CPUUtilization" ]]
+elif [[ "$METRIC" == "BinLogDiskUsage" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "FreeStorageSpace" ]]
+elif [[ "$METRIC" == "SwapUsage" ]]
     then
     echo "OK - $STAT |$STAT\n"
     exit $STATE_OK
 
-elif [[ "$METRIC" -eq "DiskQueueDepth" ]]
-    then
-    echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
-
-elif [[ "$METRIC" -eq "FreeableMemory" ]]
-    then
-    echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
-
-elif [[ "$METRIC" -eq "BinLogDiskUsage" ]]
-    then
-    echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
-
-elif [[ "$METRIC" -eq "SwapUsage" ]]
-    then
-    echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+else
+    echo "UNKNOWN - UNKNOWN CHECK"
 
 fi
 
