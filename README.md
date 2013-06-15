@@ -1,6 +1,6 @@
 ### Nagios Plugins
 
-Collection of Nagios plugins
+Collection of Nagios checks
 
 check_core_dumps
 -----------
@@ -101,11 +101,74 @@ script to pull INFO command from redis.  gets connected_clients, used_memory, us
 
 network_stats.pl
 -----------
-script to grab network interface stats from /sys/class/net on linux.  Outpus perf data as well.
+script to grab network interface stats from /sys/class/net on linux.  Outputs perf data as well.
 <pre><code>
     ./network_stats.pl eth1
     OK - collisions=0: multicast=6: rx_bytes=16756639755735: rx_compressed=0: rx_crc_errors=0: rx_dropped=0: rx_errors=0: rx_fifo_errors=0: rx_frame_errors=0: rx_length_errors=0: rx_missed_errors=25731: rx_over_errors=0: rx_packets=39310580998: tx_aborted_errors=0: tx_bytes=20133836511769: tx_carrier_errors=0: tx_compressed=0: tx_dropped=0: tx_errors=0: tx_fifo_errors=0: tx_heartbeat_errors=0: tx_packets=46496395859: tx_window_errors=0: 
 
+
+</code></pre>
+
+
+
+get_apache_status.py
+-----------
+gets apache status via mod_status.  Outputs perf data as well.
+<pre><code>
+    ./get_apache_status.py http://localhost/server-status?auto
+    OK - Sending:1,Uptime:1280,IdleWorkers:8,Total Accesses:8586,Total kBytes:12146,BytesPerReq:1448.58,CPULoad:16.0617,BytesPerSec:9716.8,Waiting:8,ReqPerSec:6.70781,Reading:25,Open:222,BusyWorkers:26, | Sending=1;Uptime=1280;IdleWorkers=8;Total Accesses=8586;Total kBytes=12146;BytesPerReq=1448.58;CPULoad=16.0617;BytesPerSec=9716.8;Waiting=8;ReqPerSec=6.70781;Reading=25;Open=222;BusyWorkers=26;
+
+
+</code></pre>
+
+
+
+get_aws_metrics.py
+-----------
+python wrapper for amazon apitools script mon-get-stats.  uses boto, needs a .boto file for aws auth, as well as whatever auth file you would normally use for mon-get-stats (will fix).  Outputs perf data as well.
+<pre><code>
+        ./get_aws_metrics.py mywebserver1 NetworkOut Maximum
+        OK - NetworkOut:45398267 | NetworkOut=45398267
+
+        or
+
+        ./get_aws_metrics.py vol-xxxx VolumeReadOps Sum 
+        OK - VolumeReadOps:0 | VolumeReadOps=0
+
+</code></pre>
+
+
+
+get_mysql_processlist.py
+-----------
+connects to mysql db and shows per user / per db connections and connection time avgs.  Outputs perf data as well.
+<pre><code>
+        ./get_mysql_processlist.py
+        OK - rdsadmin@mysql_user_conn:2,produser@Production_user_conn:156,produser@Production_avg_time:60,rdsadmin@mysql_avg_time:0
+
+</code></pre>
+
+
+
+
+get_mongo_stats.py
+-----------
+simple script to get db stats from mongo.  Outputs perf data as well.
+<pre><code>
+        ./get_mongo_stats.py http://mymongoserver:28018/serverStatus?json=1
+        OK - cursors_clientCursors_size:4,globalLock_activeClients_readers:0,connections_current:64,backgroundFlushing_average_ms:5.58905591302,globalLock_currentQueue_readers:0,globalLock_currentQueue_writers:0,mem_virtual:22409,mem_mappedWithJournal:20988,cursors_totalOpen:4,mem_mapped:10494,globalLock_activeClients_writers:0,cursors_timedOut:99,mem_resident:7018 | cursors_clientCursors_size=4;globalLock_activeClients_readers=0;connections_current=64;backgroundFlushing_average_ms=5.58905591302;globalLock_currentQueue_readers=0;globalLock_currentQueue_writers=0;mem_virtual=22409;mem_mappedWithJournal=20988;cursors_totalOpen=4;mem_mapped=10494;globalLock_activeClients_writers=0;cursors_timedOut=99;mem_resident=7018;
+
+</code></pre>
+
+
+
+
+get_elasticsearch_stats.py
+-----------
+simple script to get stats from elasticsearch. Really only works for ec2 hosts right now.  Outputs perf data as well.
+<pre><code>
+        ./get_elasticsearch_stats.py myserver
+        OK - Spiderman - jvm_mem_heap_used_in_bytes:3030145064,jvm_mem_heap_committed_in_bytes:4277534720,jvm_threads_count:78,indices_search_fetch_current:0,jvm_mem_non_heap_used_in_bytes:55179904,os_mem_used_in_bytes:7731814400,indices_get_current:0,os_mem_actual_used_in_bytes:4950654976,indices_merges_current_size_in_bytes:0,jvm_mem_non_heap_committed_in_bytes:83001344,indices_indexing_delete_current:0,indices_merges_current_docs:0,indices_indexing_index_current:0,indices_merges_current:0,indices_search_query_current:0,os_cpu_user:1,os_swap_used_in_bytes:9027584 | jvm_mem_heap_used_in_bytes=3030145064;jvm_mem_heap_committed_in_bytes=4277534720;jvm_threads_count=78;indices_search_fetch_current=0;jvm_mem_non_heap_used_in_bytes=55179904;os_mem_used_in_bytes=7731814400;indices_get_current=0;os_mem_actual_used_in_bytes=4950654976;indices_merges_current_size_in_bytes=0;jvm_mem_non_heap_committed_in_bytes=83001344;indices_indexing_delete_current=0;indices_merges_current_docs=0;indices_indexing_index_current=0;indices_merges_current=0;indices_search_query_current=0;os_cpu_user=1;os_swap_used_in_bytes=9027584
 
 </code></pre>
 
