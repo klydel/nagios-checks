@@ -179,7 +179,7 @@ check_custom_service.sh
 -----------
 bash script to get res mem, virtmem, cpupercent, mempercent of a process, sums all children pids as well.  Outputs perf data.
 <pre><code>
-	./check_custom_service www-data httpd 600 1024 85 85                      
+	./check_custom_service.sh www-data httpd 600 1024 85 85                      
 	OK - RESMEM=230MB:VIRTMEM=858MB:USEDCPU=9.4%:USEDMEM=13.8%
 
 </code></pre>
