@@ -46,7 +46,7 @@ check_rps_vip
 -----------
 Uses Apache's mod_status page to get request per second (rps) stats from all servers in a group.  If you had 150 servers (named nym-web1 to nym-web150), you could run this script like so:
 <pre><code>
-    ./check_rps_vip nym-web
+    for i in {1..150} ; do ./check_rps_vip nym-web$i ; done
     OK : Total RPS for nym-web: 15000 | RequestsPerSecond=15000
 </code></pre>
 
