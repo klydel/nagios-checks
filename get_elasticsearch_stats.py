@@ -1,5 +1,6 @@
 #!/usr/bin/python2.7
 #get stats from elasticsearch
+# uses ec2 just for elasticsearch / comic name resolution (could be better)
 #usage : ./get_elasticsearch_stats.py myserver
 #output:
 #OK - Spiderman - jvm_mem_heap_used_in_bytes:3030145064,jvm_mem_heap_committed_in_bytes:4277534720,jvm_threads_count:78,indices_search_fetch_current:0,jvm_mem_non_heap_used_in_bytes:55179904,os_mem_used_in_bytes:7731814400,indices_get_current:0,os_mem_actual_used_in_bytes:4950654976,indices_merges_current_size_in_bytes:0,jvm_mem_non_heap_committed_in_bytes:83001344,indices_indexing_delete_current:0,indices_merges_current_docs:0,indices_indexing_index_current:0,indices_merges_current:0,indices_search_query_current:0,os_cpu_user:1,os_swap_used_in_bytes:9027584 | jvm_mem_heap_used_in_bytes=3030145064;jvm_mem_heap_committed_in_bytes=4277534720;jvm_threads_count=78;indices_search_fetch_current=0;jvm_mem_non_heap_used_in_bytes=55179904;os_mem_used_in_bytes=7731814400;indices_get_current=0;os_mem_actual_used_in_bytes=4950654976;indices_merges_current_size_in_bytes=0;jvm_mem_non_heap_committed_in_bytes=83001344;indices_indexing_delete_current=0;indices_merges_current_docs=0;indices_indexing_index_current=0;indices_merges_current=0;indices_search_query_current=0;os_cpu_user=1;os_swap_used_in_bytes=9027584
