@@ -12,7 +12,6 @@ import sys
 
 BOTO_CFG = '.boto'
 EC2_REGION = "us-east-1"
-EC2_TAG = 'role'
 DNAME = 'InstanceId'
 NSPACE = 'AWS/EC2'
 DATE_TPL = '%Y-%m-%dT%H:%M'
@@ -63,7 +62,7 @@ def get_all_instances(reservations):
     return [i for r in reservations for i in r.instances]
 
 def get_instance_ids(instances):
-    return {clean_host_name(i.tags['Name']): i.id for i in instances if EC2_TAG in i.tags}
+    return {clean_host_name(i.tags['Name']): i.id for i in instances}
 
 def connect_and_list():
     try:
