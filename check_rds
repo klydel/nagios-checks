@@ -1,29 +1,31 @@
 #!/bin/bash
 #usage : ./check_rds_new myhost WriteIOPS 800
 #OK - WriteIOPS=67.22689075630252 |WriteIOPS=67.22689075630252\n
-. /var/spool/nagios/plugins/utils.sh
 
 DBINSTANCE=$1
 METRIC=$2
 MXTHRESHOLD=$3
 MNTHRESHOLD=$4
 RESULT=""
-MON-GET-CMD="/opt/aws/apitools/mon/bin/mon-get-stats"
-AWS-CRED-FILE="/opt/aws/credential.conf"
+#change this to locatoin of mon-get-stats on your system
+MON_GET_CMD="/opt/aws/apitools/mon/bin/mon-get-stats"
+AWS_CRED_FILE="/opt/aws/credential.conf"
 
 function checkthresh {
-    RESULT=${RESULT/.*}
-    if [[ $RESULT -gt $MXTHRESHOLD ]]
-	then
-	warn
+#    RESULT=${RESULT/.*}
+    COMP=`echo "$RESULT<$MXTHRESHOLD" | bc`
+    if [[ "$COMP" -eq "0" ]]
+        then
+        warn
     else
-	echo "OK - $STAT |$STAT\n"
-	exit $STATE_OK
+        echo "OK - $STAT |$STAT\n"
+        exit 0
     fi
 }
+
 function warn {
     echo "WARNING - WARNING - $METRIC:$RESULT | $METRIC:$RESULT;"
-    exit $STATE_WARNING
+    exit 1
 }
 
 function check_stat {
@@ -40,8 +42,6 @@ function check_stat {
     fi
 }
 
-
-
 check_stat
 STAT="$METRIC=${RESULT}"
 
@@ -56,27 +56,27 @@ elif [[ "$METRIC" == "ReadIOPS" ]]
 elif [[ "$METRIC" == "ReadThroughput" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "WriteThroughput" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "ReadLatency" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "WriteLatency" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "DatabaseConnections" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "CPUUtilization" ]]
     then
@@ -90,33 +90,33 @@ elif [[ "$METRIC" == "FreeStorageSpace" ]]
 	warn
     else
 	echo "OK - $STAT |$STAT\n"
-	exit $STATE_OK
+	exit 0
     fi
 
 
 elif [[ "$METRIC" == "DiskQueueDepth" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "FreeableMemory" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "BinLogDiskUsage" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 elif [[ "$METRIC" == "SwapUsage" ]]
     then
     echo "OK - $STAT |$STAT\n"
-    exit $STATE_OK
+    exit 0
 
 else
     echo "UNKNOWN - UNKNOWN CHECK"
-
+    exit 3
 fi
 
 
