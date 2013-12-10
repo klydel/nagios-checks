@@ -8,7 +8,7 @@
 import socket
 import sys
 queue_threshold = 10000
-warning = ""
+warning = []
 host = sys.argv[1]
 port = int(sys.argv[2])
 command = "llen "
@@ -22,7 +22,7 @@ def nagios_report(totals, warning):
    if warning:
       msg = [  k+":"+v+"," for k,v in totals.iteritems()]
       perf = [  k+"="+v+";" for k,v in totals.iteritems()]
-      print "Warning - %s High -  %s | %s" % ( warning, ''.join(msg), ''.join(perf))
+      print "Warning - %s High -  %s | %s" % ( ','.join(warning), ''.join(msg), ''.join(perf))
       sys.exit(1)
    else:
       msg = [  k+":"+v+"," for k,v in totals.iteritems()]
@@ -50,7 +50,7 @@ if __name__ == '__main__':
            totals[q] = metric
         else:
            totals[q] = metric
-           warning = q
+           warning.append(q)
     redis_conn.close()
 
     nagios_report(totals, warning)
